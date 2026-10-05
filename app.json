@@ -1,0 +1,70 @@
+{
+  "expo": {
+    "name": "Roostop",
+    "slug": "roostop",
+    "scheme": "roostop",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "app.roostop.mobile",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Roostop uses your location to show your position and calculate the distance to your stop.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "During an active trip, Roostop uses your location in the background to alert you near your stop.",
+        "UIBackgroundModes": [
+          "location"
+        ]
+      }
+    },
+    "android": {
+      "package": "app.roostop.mobile",
+      "adaptiveIcon": {
+        "backgroundColor": "#F7F1E5"
+      },
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "FOREGROUND_SERVICE",
+        "FOREGROUND_SERVICE_LOCATION",
+        "VIBRATE",
+        "POST_NOTIFICATIONS",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_BACKGROUND_LOCATION",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_LOCATION"
+      ]
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-location",
+        {
+          "isIosBackgroundLocationEnabled": true,
+          "isAndroidBackgroundLocationEnabled": true,
+          "isAndroidForegroundServiceEnabled": true
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#B4232F",
+          "defaultChannel": "destination-alarms"
+        }
+      ],
+      "expo-secure-store"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "6199a0e4-ac33-4028-9905-cc7b0fa00dd9"
+      }
+    }
+  }
+}

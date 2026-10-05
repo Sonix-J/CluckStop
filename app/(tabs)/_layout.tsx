@@ -1,0 +1,4 @@
+import { Tabs } from 'expo-router';
+import { Map, Clock3, Bookmark, Settings } from 'lucide-react-native';
+import { colors } from '@/constants';
+export default function TabLayout() { return <Tabs screenOptions={{ headerShown: false, tabBarActiveTintColor: colors.rooster, tabBarInactiveTintColor: colors.muted, tabBarStyle: { height: 84, paddingTop: 9, paddingBottom: 18, backgroundColor: colors.panel, borderTopColor: colors.line }, tabBarLabelStyle: { fontSize: 12, fontWeight: '600' } }}><Tabs.Screen name="index" options={{ title: 'Home', tabBarIcon: p => <Map {...p} size={23}/> }}/><Tabs.Screen name="trips" options={{ title: 'Trips', tabBarIcon: p => <Clock3 {...p} size={23}/> }}/><Tabs.Screen name="saved" options={{ title: 'Saved', tabBarIcon: p => <Bookmark {...p} size={23}/> }}/><Tabs.Screen name="settings" options={{ title: 'Settings', tabBarIcon: p => <Settings {...p} size={23}/> }}/></Tabs>; }
