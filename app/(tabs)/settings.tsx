@@ -1,14 +1,56 @@
 import { ScrollView, Switch, Text, View } from 'react-native';
 import { BellRing, LocateFixed, ShieldCheck, Smartphone, Vibrate } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
+import { CluckieLogo } from '@/components/CluckieBrand';
 import { AppButton } from '@/components/ui';
 import { colors, RADII } from '@/constants';
 import { useRoostopStore } from '@/store/useRoostopStore';
 import { formatDistance } from '@/utils/distance';
-import { router } from 'expo-router';
+
 export default function Settings() {
-  const settings = useRoostopStore((s) => s.settings); const update = useRoostopStore((s) => s.updateSettings);
-  return <View className="flex-1 bg-cream"><SafeAreaView className="flex-1"><ScrollView contentContainerStyle={{paddingBottom: 36}}><View className="px-5 pb-4 pt-4"><Text className="text-[28px] font-bold text-ink">Settings</Text><Text className="mt-1 text-sm text-muted">Make Cluckie work your way</Text></View><Section title="Alarm"><Setting icon={<BellRing size={20} color={colors.rooster}/>} title="Default alert distance" body={formatDistance(settings.defaultRadius)}><AppButton variant="ghost" title="Change" className="min-h-11 px-2" onPress={() => update({defaultRadius: RADII[(RADII.indexOf(settings.defaultRadius)+1)%RADII.length]})}/></Setting><Setting icon={<Vibrate size={20} color={colors.rooster}/>} title="Vibration" body="Vibrate when your stop is near"><Switch value={settings.vibration} onValueChange={(value) => update({vibration:value})} trackColor={{false:colors.line,true:colors.rooster}}/></Setting><Setting icon={<Smartphone size={20} color={colors.rooster}/>} title="Alarm sound" body="Play a notification sound"><Switch value={settings.sound} onValueChange={(value) => update({sound:value})} trackColor={{false:colors.line,true:colors.rooster}}/></Setting></Section><Section title="Access"><Setting icon={<LocateFixed size={20} color={colors.rooster}/>} title="Location & notifications" body="Review system permissions"><AppButton variant="ghost" title="Review" className="min-h-11 px-2" onPress={() => router.push('/permissions')}/></Setting></Section><View className="mx-5 mt-2 rounded-2xl border border-line bg-white p-4"><View className="flex-row items-center"><ShieldCheck size={21} color={colors.rooster}/><Text className="ml-2 font-bold text-ink">Private by default</Text></View><Text className="mt-2 text-sm leading-5 text-muted">Cluckie stores saved stops and trip summaries locally. It does not keep your complete route.</Text></View><Text className="mt-7 text-center text-xs text-muted">Cluckie 1.0.0</Text></ScrollView></SafeAreaView></View>;
+  const settings = useRoostopStore((s) => s.settings);
+  const update = useRoostopStore((s) => s.updateSettings);
+  return (
+    <View className="flex-1 bg-white">
+      <SafeAreaView className="flex-1">
+        <ScrollView contentContainerStyle={{ paddingBottom: 36 }}>
+          <View className="px-5 pb-4 pt-4">
+            <CluckieLogo width={96} />
+            <Text className="mt-5 text-[28px] font-bold text-ink">Settings</Text>
+            <Text className="mt-1 text-sm text-muted">Make Cluckie work your way</Text>
+          </View>
+          <Section title="Alarm">
+            <Setting icon={<BellRing size={20} color={colors.rooster} />} title="Default alert distance" body={formatDistance(settings.defaultRadius)}>
+              <AppButton variant="ghost" title="Change" className="min-h-11 px-2" onPress={() => update({ defaultRadius: RADII[(RADII.indexOf(settings.defaultRadius) + 1) % RADII.length] })} />
+            </Setting>
+            <Setting icon={<Vibrate size={20} color={colors.rooster} />} title="Vibration" body="Vibrate when your stop is near">
+              <Switch value={settings.vibration} onValueChange={(value) => update({ vibration: value })} trackColor={{ false: colors.line, true: colors.rooster }} />
+            </Setting>
+            <Setting icon={<Smartphone size={20} color={colors.rooster} />} title="Alarm sound" body="Play a notification sound">
+              <Switch value={settings.sound} onValueChange={(value) => update({ sound: value })} trackColor={{ false: colors.line, true: colors.rooster }} />
+            </Setting>
+          </Section>
+          <Section title="Access">
+            <Setting icon={<LocateFixed size={20} color={colors.rooster} />} title="Location & notifications" body="Review system permissions">
+              <AppButton variant="ghost" title="Review" className="min-h-11 px-2" onPress={() => router.push('/permissions')} />
+            </Setting>
+          </Section>
+          <View className="mx-5 mt-2 rounded-2xl border border-line bg-white p-4">
+            <View className="flex-row items-center"><ShieldCheck size={21} color={colors.rooster} /><Text className="ml-2 font-bold text-ink">Private by default</Text></View>
+            <Text className="mt-2 text-sm leading-5 text-muted">Cluckie stores saved stops and trip summaries locally. It does not keep your complete route.</Text>
+          </View>
+          <Text className="mt-7 text-center text-xs text-muted">Cluckie 1.0.0</Text>
+        </ScrollView>
+      </SafeAreaView>
+    </View>
+  );
 }
-function Section({title,children}:{title:string;children:React.ReactNode}) { return <View className="mb-5"><Text className="mb-2 px-5 text-xs font-bold uppercase tracking-[1.4px] text-muted">{title}</Text><View className="mx-5 overflow-hidden rounded-2xl border border-line bg-white">{children}</View></View>; }
-function Setting({icon,title,body,children}:{icon:React.ReactNode;title:string;body:string;children:React.ReactNode}) { return <View className="min-h-[68px] flex-row items-center border-b border-line px-4 py-3 last:border-b-0">{icon}<View className="ml-3 flex-1"><Text className="text-[15px] font-semibold text-ink">{title}</Text><Text className="mt-0.5 text-xs text-muted">{body}</Text></View>{children}</View>; }
+
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  return <View className="mb-5"><Text className="mb-2 px-5 text-xs font-bold uppercase tracking-[1.4px] text-muted">{title}</Text><View className="mx-5 overflow-hidden rounded-2xl border border-line bg-white">{children}</View></View>;
+}
+
+function Setting({ icon, title, body, children }: { icon: React.ReactNode; title: string; body: string; children: React.ReactNode }) {
+  return <View className="min-h-[68px] flex-row items-center border-b border-line px-4 py-3 last:border-b-0">{icon}<View className="ml-3 flex-1"><Text className="text-[15px] font-semibold text-ink">{title}</Text><Text className="mt-0.5 text-xs text-muted">{body}</Text></View>{children}</View>;
+}

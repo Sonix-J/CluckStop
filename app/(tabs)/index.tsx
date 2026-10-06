@@ -41,7 +41,7 @@ export default function Home() {
   const [gps, setGps] = useState("Finding your location…");
   const [distance, setDistance] = useState<number>();
   const snapPoints = useMemo(
-    () => (destination || activeTrip ? ["27%", "55%"] : ["18%", "32%"]),
+    () => (destination || activeTrip ? ["27%", "55%"] : ["44%", "62%"]),
     [destination, activeTrip],
   );
   const locate = useCallback(async () => {

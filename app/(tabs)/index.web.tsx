@@ -83,7 +83,7 @@ export default function WebHome() {
           )}
         </SafeAreaView>
         {!destination ? (
-          <View pointerEvents="none" className="absolute inset-x-4 bottom-4 rounded-[22px] border border-line bg-panel p-5 shadow-lg">
+          <View pointerEvents="none" className="absolute inset-x-0 bottom-0 min-h-[44%] rounded-t-[24px] border-t border-line bg-panel px-5 pb-8 pt-6 shadow-lg">
             <Text className="text-[22px] font-bold leading-7 text-ink">Where should we wake you?</Text>
             <Text className="mt-2 text-sm leading-5 text-muted">Search for a destination above. Your selected stop and alert distance will appear here.</Text>
             <View className="mt-4 flex-row items-center rounded-xl bg-cream px-3 py-3"><MapPin size={18} color={colors.rooster} /><Text className="ml-2 text-sm font-semibold text-ink">Cebu City map ready</Text></View>
