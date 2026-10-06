@@ -1,5 +1,5 @@
 import type { Destination } from '@/types';
-export const colors = { cream: '#F7F1E5', panel: '#FFFCF7', ink: '#24211F', muted: '#746D65', rooster: '#B4232F', roosterDark: '#8E1823', yolk: '#E6A523', line: '#DED5C6', night: '#171513', white: '#FFFFFF' };
+export const colors = { cream: '#FFF6EE', panel: '#FFFFFF', ink: '#1F1C1A', muted: '#716A64', rooster: '#D1263B', roosterDark: '#AA1D30', yolk: '#F4B223', line: '#E1D8CF', night: '#171513', white: '#FFFFFF', softPrimary: '#FFE8DD' };
 export const CEBU_REGION = { latitude: 10.3157, longitude: 123.8854, latitudeDelta: 0.08, longitudeDelta: 0.08 };
 export const SAMPLE_DESTINATIONS: Destination[] = [
   { id: 'ayala', name: 'Ayala Center Cebu', address: 'Cebu Business Park, Cebu City', coordinate: { latitude: 10.3181, longitude: 123.9032 } },

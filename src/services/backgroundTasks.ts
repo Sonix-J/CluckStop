@@ -7,7 +7,7 @@ import type { Trip } from '@/types';
 
 export const GEOFENCE_TASK = 'ROOSTOP_DESTINATION_GEOFENCE';
 export const LOCATION_TASK = 'ROOSTOP_LOCATION_UPDATES';
-const ACTIVE_TRIP_KEY = 'roostop-background-trip';
+const ACTIVE_TRIP_KEY = 'cluckie-background-trip';
 
 async function fireDestinationAlarm(trip: Trip, distance?: number) {
   if (trip.alarmTriggered) return;
@@ -59,7 +59,7 @@ export async function requestTripPermissions() {
 export async function armTrip(trip: Trip) {
   await AsyncStorage.setItem(ACTIVE_TRIP_KEY, JSON.stringify(trip));
   await Location.startGeofencingAsync(GEOFENCE_TASK, [{ identifier: trip.id, ...trip.destination.coordinate, radius: Math.max(100, trip.alertRadius), notifyOnEnter: true, notifyOnExit: false }]);
-  await Location.startLocationUpdatesAsync(LOCATION_TASK, { accuracy: Location.Accuracy.Balanced, distanceInterval: 150, deferredUpdatesDistance: 250, deferredUpdatesInterval: 60_000, pausesUpdatesAutomatically: false, showsBackgroundLocationIndicator: true, activityType: Location.ActivityType.OtherNavigation, foregroundService: { notificationTitle: 'Roostop trip active', notificationBody: `Watching for ${trip.destination.name}`, notificationColor: '#B4232F', killServiceOnDestroy: false } });
+  await Location.startLocationUpdatesAsync(LOCATION_TASK, { accuracy: Location.Accuracy.Balanced, distanceInterval: 150, deferredUpdatesDistance: 250, deferredUpdatesInterval: 60_000, pausesUpdatesAutomatically: false, showsBackgroundLocationIndicator: true, activityType: Location.ActivityType.OtherNavigation, foregroundService: { notificationTitle: 'Cluckie trip active', notificationBody: `Watching for ${trip.destination.name}`, notificationColor: '#D1263B', killServiceOnDestroy: false } });
 }
 
 export async function disarmTrip() {

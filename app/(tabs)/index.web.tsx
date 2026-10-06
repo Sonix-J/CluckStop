@@ -4,7 +4,6 @@ import { router } from 'expo-router';
 import { Bookmark, ChevronRight, MapPin, Navigation, ShieldCheck, X } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AppButton, Chip, SearchBox } from '@/components/ui';
-import { BrandMark } from '@/components/BrandMark';
 import { colors, RADII, SAMPLE_DESTINATIONS } from '@/constants';
 import { useRoostopStore } from '@/store/useRoostopStore';
 import { formatDistance } from '@/utils/distance';
@@ -67,12 +66,11 @@ export default function WebHome() {
       <View className="relative w-full max-w-[560px] flex-1 overflow-hidden bg-cream">
         <WebMap coordinate={destination?.coordinate} title={destination?.name ?? 'Cebu City'} />
         <SafeAreaView pointerEvents="box-none" className="absolute inset-x-0 top-0 px-4 pt-1">
-          <View className="flex-row items-center gap-3">
-            <View className="h-11 w-11 items-center justify-center rounded-2xl bg-panel shadow-sm"><BrandMark size={36} /></View>
+          <View className="flex-row items-center">
             <View className="flex-1"><SearchBox value={query} onChangeText={setQuery} placeholder="Where should we wake you?" /></View>
           </View>
           {query.length > 0 && (
-            <View className="ml-14 mt-2 overflow-hidden rounded-2xl border border-line bg-panel shadow-lg">
+            <View className="mt-2 overflow-hidden rounded-2xl border border-line bg-panel shadow-lg">
               <View className="flex-row items-center border-b border-line px-4 py-3"><Text className="flex-1 text-xs font-bold uppercase tracking-[1.4px] text-muted">Suggested places</Text><Pressable accessibilityLabel="Clear search" onPress={() => setQuery('')} className="p-1"><X size={18} color={colors.muted} /></Pressable></View>
               {results.length ? results.map((item) => (
                 <Pressable key={item.id} className="min-h-16 flex-row items-center border-b border-line px-4 py-3 last:border-b-0" onPress={() => { select(item); setQuery(''); }}>

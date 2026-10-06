@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Roostop",
-    "slug": "roostop",
-    "scheme": "roostop",
+    "name": "Cluckie",
+    "slug": "cluckie",
+    "scheme": "cluckie",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
@@ -11,8 +11,8 @@
       "supportsTablet": true,
       "bundleIdentifier": "app.roostop.mobile",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "Roostop uses your location to show your position and calculate the distance to your stop.",
-        "NSLocationAlwaysAndWhenInUseUsageDescription": "During an active trip, Roostop uses your location in the background to alert you near your stop.",
+        "NSLocationWhenInUseUsageDescription": "Cluckie uses your location to show your position and calculate the distance to your stop.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "During an active trip, Cluckie uses your location in the background to alert you near your stop.",
         "UIBackgroundModes": [
           "location"
         ]
@@ -21,7 +21,7 @@
     "android": {
       "package": "app.roostop.mobile",
       "adaptiveIcon": {
-        "backgroundColor": "#F7F1E5"
+        "backgroundColor": "#FFF6EE"
       },
       "permissions": [
         "ACCESS_COARSE_LOCATION",
@@ -41,6 +41,15 @@
     "plugins": [
       "expo-router",
       [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#D1263B",
+          "image": "./Cluckie/logo_white.png",
+          "imageWidth": 220,
+          "resizeMode": "contain"
+        }
+      ],
+      [
         "expo-location",
         {
           "isIosBackgroundLocationEnabled": true,
@@ -51,7 +60,7 @@
       [
         "expo-notifications",
         {
-          "color": "#B4232F",
+          "color": "#D1263B",
           "defaultChannel": "destination-alarms"
         }
       ],

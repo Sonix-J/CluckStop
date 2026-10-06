@@ -17,7 +17,6 @@ import {
   ShieldCheck,
 } from "lucide-react-native";
 import { AppButton, Chip, SearchBox } from "@/components/ui";
-import { BrandMark } from "@/components/BrandMark";
 import { CEBU_REGION, colors, RADII } from "@/constants";
 import { armTrip, requestTripPermissions } from "@/services/backgroundTasks";
 import { useRoostopStore } from "@/store/useRoostopStore";
@@ -143,7 +142,7 @@ export default function Home() {
         onStop={() =>
           Alert.alert(
             "Stop this trip?",
-            "Roostop will no longer watch for your destination.",
+            "Cluckie will no longer watch for your destination.",
             [
               { text: "Keep trip", style: "cancel" },
               {
@@ -193,8 +192,7 @@ export default function Home() {
         pointerEvents="box-none"
         className="absolute inset-x-0 top-0 px-4"
       >
-        <View className="mt-2 flex-row items-center gap-3">
-          <BrandMark size={42} />
+        <View className="mt-2 flex-row items-center">
           <Pressable className="flex-1" onPress={() => router.push("/search")}>
             <SearchBox
               editable={false}

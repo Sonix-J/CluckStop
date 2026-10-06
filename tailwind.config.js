@@ -3,6 +3,6 @@ module.exports = {
   darkMode: 'class',
   content: ['./app/**/*.{js,jsx,ts,tsx}', './src/**/*.{js,jsx,ts,tsx}'],
   presets: [require('nativewind/preset')],
-  theme: { extend: { colors: { cream: '#F7F1E5', ink: '#24211F', muted: '#746D65', rooster: '#B4232F', 'rooster-dark': '#8E1823', yolk: '#E6A523', line: '#DED5C6', night: '#171513', panel: '#FFFCF7' }, borderRadius: { app: '18px' } } },
+  theme: { extend: { colors: { cream: '#FFF6EE', ink: '#1F1C1A', muted: '#716A64', rooster: '#D1263B', 'rooster-dark': '#AA1D30', yolk: '#F4B223', line: '#E1D8CF', night: '#171513', panel: '#FFFFFF', 'soft-primary': '#FFE8DD' }, borderRadius: { app: '16px' } } },
   plugins: []
 };

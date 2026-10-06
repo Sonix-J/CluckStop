@@ -1,4 +1,4 @@
-# Roostop
+# Cluckie
 
 Location-based commuter alarm built with Expo, React Native, TypeScript, Expo Router, NativeWind, Zustand, `react-native-maps`, Expo Location, TaskManager, and Notifications.
 
