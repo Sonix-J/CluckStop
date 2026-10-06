@@ -2,7 +2,6 @@ import { ScrollView, Switch, Text, View } from 'react-native';
 import { BellRing, LocateFixed, ShieldCheck, Smartphone, Vibrate } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { CluckieLogo } from '@/components/CluckieBrand';
 import { AppButton } from '@/components/ui';
 import { colors, RADII } from '@/constants';
 import { useRoostopStore } from '@/store/useRoostopStore';
@@ -16,7 +15,6 @@ export default function Settings() {
       <SafeAreaView className="flex-1">
         <ScrollView contentContainerStyle={{ paddingBottom: 36 }}>
           <View className="px-5 pb-4 pt-4">
-            <CluckieLogo width={96} />
             <Text className="mt-5 text-[28px] font-bold text-ink">Settings</Text>
           </View>
           <Section title="Alarm">

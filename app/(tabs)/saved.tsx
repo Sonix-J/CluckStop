@@ -2,7 +2,7 @@ import { Alert, FlatList, Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { MapPin, Trash2 } from 'lucide-react-native';
-import { CluckieLogo, CluckieMascot } from '@/components/CluckieBrand';
+import { CluckieMascot } from '@/components/CluckieBrand';
 import { AccountRequiredState } from '@/components/AccountRequiredState';
 import { colors } from '@/constants';
 import { useRoostopStore } from '@/store/useRoostopStore';
@@ -19,7 +19,6 @@ export default function Saved() {
     <View className="flex-1 bg-white">
       <SafeAreaView className="flex-1">
         <View className="px-5 pb-5 pt-4">
-          <CluckieLogo width={96} />
           <Text className="mt-5 text-[28px] font-bold text-ink">Saved</Text>
         </View>
         {authStatus !== 'authenticated' ? (
