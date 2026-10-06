@@ -1,6 +1,8 @@
 import '../global.css';
 import { useEffect } from 'react';
+import { Text } from 'react-native';
 import { Stack, useRouter, useSegments } from 'expo-router';
+import { useFonts, Manrope_400Regular, Manrope_600SemiBold, Manrope_700Bold } from '@expo-google-fonts/manrope';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import * as Notifications from 'expo-notifications';
@@ -8,6 +10,7 @@ import { configureNotifications, readBackgroundTrip } from '@/services/backgroun
 import { useRoostopStore } from '@/store/useRoostopStore';
 
 export default function RootLayout() {
+  const [fontsLoaded] = useFonts({ Manrope_400Regular, Manrope_600SemiBold, Manrope_700Bold });
   const hydrated = useRoostopStore((s) => s.hydrated);
   const complete = useRoostopStore((s) => s.onboardingComplete);
   const triggerAlarm = useRoostopStore((s) => s.triggerAlarm);
@@ -33,6 +36,13 @@ export default function RootLayout() {
     else if (complete && first === 'onboarding') router.replace('/(tabs)');
   }, [hydrated, complete, router, segments]);
 
-  if (!hydrated) return null;
+  useEffect(() => {
+    if (!fontsLoaded) return;
+    const text = Text as typeof Text & { defaultProps?: { style?: unknown } };
+    text.defaultProps = text.defaultProps ?? {};
+    text.defaultProps.style = [{ fontFamily: 'Manrope_400Regular' }, text.defaultProps.style];
+  }, [fontsLoaded]);
+
+  if (!hydrated || !fontsLoaded) return null;
   return <GestureHandlerRootView style={{ flex: 1 }}><StatusBar style="auto"/><Stack screenOptions={{ headerShown: false, animation: 'fade' }}><Stack.Screen name="index"/><Stack.Screen name="welcome"/><Stack.Screen name="auth"/><Stack.Screen name="(tabs)"/><Stack.Screen name="onboarding"/><Stack.Screen name="search" options={{ presentation: 'modal' }}/><Stack.Screen name="permissions" options={{ presentation: 'modal' }}/><Stack.Screen name="alarm" options={{ gestureEnabled: false }}/><Stack.Screen name="arrival" options={{ gestureEnabled: false }}/></Stack></GestureHandlerRootView>;
 }

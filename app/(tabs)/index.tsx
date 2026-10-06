@@ -26,6 +26,7 @@ import type { Coordinate, Trip } from "@/types";
 export default function Home() {
   const map = useRef<MapView>(null);
   const sheet = useRef<BottomSheet>(null);
+  const hasCenteredOnUser = useRef(false);
   const destination = useRoostopStore((s) => s.selectedDestination),
     select = useRoostopStore((s) => s.selectDestination),
     radius = useRoostopStore((s) => s.alertRadius),
@@ -48,7 +49,10 @@ export default function Home() {
   const locate = useCallback(async () => {
     try {
       const existing = await Location.getForegroundPermissionsAsync();
-      if (existing.status !== "granted") {
+      const permission = existing.status === 'undetermined'
+        ? await Location.requestForegroundPermissionsAsync()
+        : existing;
+      if (permission.status !== "granted") {
         setGps("Location permission needed");
         return;
       }
@@ -60,6 +64,10 @@ export default function Home() {
         longitude: pos.coords.longitude,
       };
       setCurrent(c);
+      if (!hasCenteredOnUser.current && !destination) {
+        hasCenteredOnUser.current = true;
+        map.current?.animateToRegion({ ...c, latitudeDelta: 0.025, longitudeDelta: 0.025 }, 500);
+      }
       setGps(
         pos.coords.accuracy && pos.coords.accuracy > 100
           ? "Low GPS accuracy"
@@ -81,13 +89,16 @@ export default function Home() {
   useEffect(() => {
     if (destination) {
       sheet.current?.snapToIndex(1);
-      map.current?.animateToRegion({
-        ...destination.coordinate,
-        latitudeDelta: 0.025,
-        longitudeDelta: 0.025,
-      });
+      if (current) {
+        map.current?.fitToCoordinates([current, destination.coordinate], {
+          edgePadding: { top: 130, right: 70, bottom: 330, left: 70 },
+          animated: true,
+        });
+      } else {
+        map.current?.animateToRegion({ ...destination.coordinate, latitudeDelta: 0.025, longitudeDelta: 0.025 });
+      }
     }
-  }, [destination]);
+  }, [current, destination]);
   const dropPin = (e: LongPressEvent) => {
     const coordinate = e.nativeEvent.coordinate;
     select({
@@ -197,7 +208,7 @@ export default function Home() {
           <Pressable className="flex-1 rounded-app bg-panel shadow-lg" onPress={() => router.push("/search")}>
             <SearchBox
               editable={false}
-              placeholder="Where should we wake you?"
+              placeholder="Search stop"
             />
           </Pressable>
         </View>
@@ -265,7 +276,7 @@ export default function Home() {
               </View>
               <AppButton
                 className="mt-6"
-                title="Start trip"
+                title="Start Cluckie"
                 loading={busy}
                 icon={<Navigation size={20} color="white" />}
                 onPress={begin}
@@ -278,7 +289,7 @@ export default function Home() {
           ) : (
             <>
               <Text className="text-xl font-bold text-ink">
-                Where should we wake you?
+                Where should Cluckie wake you?
               </Text>
               <Text className="mt-1 text-sm text-muted">
                 Search above or press and hold the map to drop a pin.
@@ -354,7 +365,7 @@ function ActiveTripMap({
         <View className="mt-2 flex-row items-center rounded-app border border-line bg-panel p-3">
           <View className="h-3 w-3 rounded-full bg-green-600" />
           <Text className="ml-2 flex-1 text-sm font-bold text-ink">
-            ACTIVE TRIP
+            CLUCKIE IS WATCHING YOUR STOP
           </Text>
           <Text className="text-xs font-semibold text-muted">{gps}</Text>
         </View>

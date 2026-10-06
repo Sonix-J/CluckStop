@@ -1,10 +1,11 @@
-import { createElement, useMemo, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { createElement, useState } from 'react';
+import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { Bookmark, ChevronRight, MapPin, Navigation, ShieldCheck, X } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AppButton, Chip, SearchBox } from '@/components/ui';
-import { colors, RADII, SAMPLE_DESTINATIONS } from '@/constants';
+import { colors, RADII } from '@/constants';
+import { usePlaceSearch } from '@/hooks/usePlaceSearch';
 import { useRoostopStore } from '@/store/useRoostopStore';
 import { formatDistance } from '@/utils/distance';
 import type { Coordinate, Trip } from '@/types';
@@ -23,11 +24,7 @@ export default function WebHome() {
   const saveDestination = useRoostopStore((s) => s.saveDestination);
   const authStatus = useRoostopStore((s) => s.authStatus);
   const [query, setQuery] = useState('');
-
-  const results = useMemo(() => {
-    if (!query.trim()) return [];
-    return SAMPLE_DESTINATIONS.filter((item) => `${item.name} ${item.address}`.toLowerCase().includes(query.toLowerCase()));
-  }, [query]);
+  const { results, loading, error } = usePlaceSearch(query);
 
   if (activeTrip && status !== 'idle') {
     return (
@@ -72,14 +69,14 @@ export default function WebHome() {
           </View>
           {query.length > 0 && (
             <View className="mt-2 overflow-hidden rounded-2xl border border-line bg-panel shadow-lg">
-              <View className="flex-row items-center border-b border-line px-4 py-3"><Text className="flex-1 text-xs font-bold uppercase tracking-[1.4px] text-muted">Suggested places</Text><Pressable accessibilityLabel="Clear search" onPress={() => setQuery('')} className="p-1"><X size={18} color={colors.muted} /></Pressable></View>
+              <View className="flex-row items-center border-b border-line px-4 py-3"><Text className="flex-1 text-xs font-bold uppercase tracking-[1.4px] text-muted">Search results</Text>{loading && <ActivityIndicator className="mr-2" size="small" color={colors.rooster} />}<Pressable accessibilityLabel="Clear search" onPress={() => setQuery('')} className="p-1"><X size={18} color={colors.muted} /></Pressable></View>
               {results.length ? results.map((item) => (
                 <Pressable key={item.id} className="min-h-16 flex-row items-center border-b border-line px-4 py-3 last:border-b-0" onPress={() => { select(item); setQuery(''); }}>
                   <View className="h-9 w-9 items-center justify-center rounded-full bg-red-50"><MapPin size={18} color={colors.rooster} /></View>
                   <View className="ml-3 flex-1"><Text className="text-[15px] font-bold text-ink">{item.name}</Text><Text className="mt-0.5 text-xs text-muted">{item.address}</Text></View>
                   <ChevronRight size={18} color={colors.muted} />
                 </Pressable>
-              )) : <Text className="px-4 py-5 text-sm text-muted">No matching destinations.</Text>}
+              )) : !loading && <Text className="px-4 py-5 text-sm text-muted">{query.trim().length < 3 ? 'Type at least 3 characters.' : error || 'No matching places found.'}</Text>}
             </View>
           )}
         </SafeAreaView>
@@ -98,7 +95,7 @@ export default function WebHome() {
             </View>
             <Text className="mb-3 mt-5 text-xs font-bold uppercase tracking-[1.4px] text-muted">Alert distance</Text>
             <View className="flex-row flex-wrap gap-2">{RADII.map((item) => <Chip key={item} selected={radius === item} label={formatDistance(item)} onPress={() => setRadius(item)} />)}</View>
-            <AppButton className="mt-5" title="Start preview trip" icon={<Navigation size={19} color="white" />} onPress={begin} />
+            <AppButton className="mt-5" title="Start Cluckie" icon={<Navigation size={19} color="white" />} onPress={begin} />
             <Text className="mt-3 text-center text-[11px] leading-4 text-muted">Web mode previews the flow. Live background alerts require the iPhone app.</Text>
           </View>
         )}

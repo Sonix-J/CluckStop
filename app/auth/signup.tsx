@@ -35,7 +35,7 @@ export default function SignupScreen() {
       <View className="items-center">
         <CluckieMascot variant="signup" width={210} height={210} />
         <Text className="text-center text-[27px] font-bold text-ink">Join the <Text className="text-rooster">flock</Text></Text>
-        <Text className="mt-1 max-w-xs text-center text-sm leading-5 text-muted">Create your account and let <Text className="text-rooster">Cluckie</Text> keep watch on your ride.</Text>
+        <Text className="mb-6 mt-2 max-w-xs text-center text-sm leading-5 text-muted">Create your account and let <Text className="text-rooster">Cluckie</Text> keep watch on your ride.</Text>
       </View>
       <AuthCard>
         <AuthInput label="Username" placeholder="Enter your username" value={form.username} onChangeText={(value) => setForm({ ...form, username: value })} error={errors.username} />

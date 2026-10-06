@@ -14,6 +14,7 @@ export default function Trips() {
     <View className="flex-1 bg-white">
       <SafeAreaView className="flex-1">
         <View className="px-5 pb-4 pt-4">
+          <CluckieLogo width={96} />
           <Text className="mt-5 text-[28px] font-bold text-ink">Recent trips</Text>
         </View>
         {authStatus !== 'authenticated' ? (

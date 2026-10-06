@@ -16,6 +16,7 @@ export default function Settings() {
       <SafeAreaView className="flex-1">
         <ScrollView contentContainerStyle={{ paddingBottom: 36 }}>
           <View className="px-5 pb-4 pt-4">
+            <CluckieLogo width={96} />
             <Text className="mt-5 text-[28px] font-bold text-ink">Settings</Text>
           </View>
           <Section title="Alarm">
