@@ -16,9 +16,7 @@ export default function Settings() {
       <SafeAreaView className="flex-1">
         <ScrollView contentContainerStyle={{ paddingBottom: 36 }}>
           <View className="px-5 pb-4 pt-4">
-            <CluckieLogo width={96} />
             <Text className="mt-5 text-[28px] font-bold text-ink">Settings</Text>
-            <Text className="mt-1 text-sm text-muted">Make Cluckie work your way</Text>
           </View>
           <Section title="Alarm">
             <Setting icon={<BellRing size={20} color={colors.rooster} />} title="Default alert distance" body={formatDistance(settings.defaultRadius)}>

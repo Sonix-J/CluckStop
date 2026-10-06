@@ -21,6 +21,7 @@ export default function WebHome() {
   const triggerAlarm = useRoostopStore((s) => s.triggerAlarm);
   const saved = useRoostopStore((s) => s.saved);
   const saveDestination = useRoostopStore((s) => s.saveDestination);
+  const authStatus = useRoostopStore((s) => s.authStatus);
   const [query, setQuery] = useState('');
 
   const results = useMemo(() => {
@@ -65,9 +66,9 @@ export default function WebHome() {
     <View className="flex-1 items-center bg-[#E9E4DA]">
       <View className="relative w-full max-w-[560px] flex-1 overflow-hidden bg-cream">
         <WebMap coordinate={destination?.coordinate} title={destination?.name ?? 'Cebu City'} />
-        <SafeAreaView pointerEvents="box-none" className="absolute inset-x-0 top-0 px-4 pt-1">
+        <SafeAreaView pointerEvents="box-none" className="absolute inset-x-0 top-0 px-4 pt-3">
           <View className="flex-row items-center">
-            <View className="flex-1"><SearchBox value={query} onChangeText={setQuery} placeholder="Where should we wake you?" /></View>
+            <View className="flex-1 rounded-app bg-panel shadow-lg"><SearchBox value={query} onChangeText={setQuery} placeholder="Where should we wake you?" /></View>
           </View>
           {query.length > 0 && (
             <View className="mt-2 overflow-hidden rounded-2xl border border-line bg-panel shadow-lg">
@@ -93,7 +94,7 @@ export default function WebHome() {
             <View className="flex-row items-start">
               <View className="h-11 w-11 items-center justify-center rounded-full bg-red-50"><MapPin size={21} color={colors.rooster} /></View>
               <View className="ml-3 flex-1"><Text className="text-[20px] font-bold leading-6 text-ink">{destination.name}</Text><Text className="mt-1 text-sm leading-5 text-muted">{destination.address}</Text></View>
-              <Pressable accessibilityRole="button" accessibilityLabel="Save destination" onPress={() => saveDestination({ ...destination, label: destination.name, defaultRadius: radius })} className="-mr-2 -mt-2 h-11 w-11 items-center justify-center rounded-full"><Bookmark size={22} color={isSaved ? colors.rooster : colors.muted} fill={isSaved ? colors.rooster : 'none'} /></Pressable>
+              <Pressable accessibilityRole="button" accessibilityLabel="Save destination" onPress={() => authStatus === 'authenticated' ? saveDestination({ ...destination, label: destination.name, defaultRadius: radius }) : router.push('/(tabs)/saved')} className="-mr-2 -mt-2 h-11 w-11 items-center justify-center rounded-full"><Bookmark size={22} color={isSaved ? colors.rooster : colors.muted} fill={isSaved ? colors.rooster : 'none'} /></Pressable>
             </View>
             <Text className="mb-3 mt-5 text-xs font-bold uppercase tracking-[1.4px] text-muted">Alert distance</Text>
             <View className="flex-row flex-wrap gap-2">{RADII.map((item) => <Chip key={item} selected={radius === item} label={formatDistance(item)} onPress={() => setRadius(item)} />)}</View>

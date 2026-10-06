@@ -2,21 +2,28 @@ import { FlatList, Text, View } from 'react-native';
 import { CheckCircle2 } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CluckieLogo, CluckieMascot } from '@/components/CluckieBrand';
+import { AccountRequiredState } from '@/components/AccountRequiredState';
 import { colors } from '@/constants';
 import { useRoostopStore } from '@/store/useRoostopStore';
 import { formatDistance } from '@/utils/distance';
 
 export default function Trips() {
   const history = useRoostopStore((s) => s.history);
+  const authStatus = useRoostopStore((s) => s.authStatus);
   return (
     <View className="flex-1 bg-white">
       <SafeAreaView className="flex-1">
         <View className="px-5 pb-4 pt-4">
-          <CluckieLogo width={96} />
           <Text className="mt-5 text-[28px] font-bold text-ink">Recent trips</Text>
-          <Text className="mt-1 text-sm text-muted">Destination alarms stored on this device</Text>
         </View>
-        <FlatList
+        {authStatus !== 'authenticated' ? (
+          <AccountRequiredState
+            mascot="login"
+            title="Keep track of every ride"
+            body="Sign in or create an account to save trips and view your travel history."
+            returnTo="/(tabs)/trips"
+          />
+        ) : <FlatList
           data={history}
           keyExtractor={(item) => item.id}
           contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 24, flexGrow: 1 }}
@@ -50,7 +57,7 @@ export default function Trips() {
               </View>
             </View>
           )}
-        />
+        />}
       </SafeAreaView>
     </View>
   );

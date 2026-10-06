@@ -36,6 +36,7 @@ export default function Home() {
     end = useRoostopStore((s) => s.endTrip),
     saved = useRoostopStore((s) => s.saved),
     saveDestination = useRoostopStore((s) => s.saveDestination);
+  const authStatus = useRoostopStore((s) => s.authStatus);
   const [current, setCurrent] = useState<Coordinate>();
   const [busy, setBusy] = useState(false);
   const [gps, setGps] = useState("Finding your location…");
@@ -190,10 +191,10 @@ export default function Home() {
       </MapView>
       <SafeAreaView
         pointerEvents="box-none"
-        className="absolute inset-x-0 top-0 px-4"
+        className="absolute inset-x-0 top-0 px-4 pt-2"
       >
         <View className="mt-2 flex-row items-center">
-          <Pressable className="flex-1" onPress={() => router.push("/search")}>
+          <Pressable className="flex-1 rounded-app bg-panel shadow-lg" onPress={() => router.push("/search")}>
             <SearchBox
               editable={false}
               placeholder="Where should we wake you?"
@@ -237,13 +238,9 @@ export default function Home() {
                 <Pressable
                   accessibilityLabel="Save destination"
                   accessibilityState={{ selected: saved.some((item) => item.id === destination.id) }}
-                  onPress={() =>
-                    saveDestination({
-                      ...destination,
-                      label: destination.name,
-                      defaultRadius: radius,
-                    })
-                  }
+                  onPress={() => authStatus === 'authenticated'
+                    ? saveDestination({ ...destination, label: destination.name, defaultRadius: radius })
+                    : router.push('/(tabs)/saved')}
                   className="p-2"
                 >
                   <Bookmark
@@ -286,7 +283,7 @@ export default function Home() {
               <Text className="mt-1 text-sm text-muted">
                 Search above or press and hold the map to drop a pin.
               </Text>
-              {saved.length > 0 && (
+              {authStatus === 'authenticated' && saved.length > 0 && (
                 <View className="mt-4 flex-row gap-2">
                   {saved.slice(0, 2).map((s) => (
                     <Chip
