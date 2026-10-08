@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { ActivityIndicator, FlatList, Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { ChevronLeft, MapPin } from 'lucide-react-native';
-import { Screen, SearchBox } from '@/components/ui';
+import { SearchBox } from '@/components/ui';
 import { colors } from '@/constants';
+import { CluckieMascot } from '@/components/CluckieBrand';
 import { usePlaceSearch } from '@/hooks/usePlaceSearch';
 import { useRoostopStore } from '@/store/useRoostopStore';
 
@@ -15,13 +17,14 @@ export default function SearchScreen() {
   const helper = query.trim().length < 3 ? 'Enter at least 3 characters to search real places.' : error;
 
   return (
-    <Screen className="bg-white">
-      <SafeAreaView className="flex-1">
+    <View className="flex-1" style={{ backgroundColor: '#FFFFFF' }}>
+      <StatusBar style="dark" />
+      <SafeAreaView className="flex-1" style={{ backgroundColor: '#FFFFFF' }}>
         <View className="flex-row items-center gap-2 px-4 py-3">
           <Pressable accessibilityLabel="Close search" onPress={() => router.back()} className="h-12 w-12 items-center justify-center">
             <ChevronLeft size={26} color={colors.ink} />
           </Pressable>
-          <View className="flex-1 rounded-app bg-white shadow-lg">
+          <View className="flex-1 rounded-app border border-line bg-white">
             <SearchBox autoFocus value={query} onChangeText={setQuery} placeholder="Search destinations" returnKeyType="search" />
           </View>
         </View>
@@ -34,7 +37,23 @@ export default function SearchScreen() {
           keyExtractor={(item) => item.id}
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag"
-          ListEmptyComponent={!loading ? <Text className="px-8 py-12 text-center text-sm leading-5 text-muted">{helper || 'No matching places found. Try a more specific name or address.'}</Text> : null}
+          ListEmptyComponent={!loading ? (
+            <View className="items-center px-8 pt-16">
+              <CluckieMascot
+                variant={query.trim().length < 3 ? 'login' : 'thinking'}
+                width={190}
+                height={165}
+              />
+              <Text className="mt-5 text-center text-xl font-bold text-ink">
+                {query.trim().length < 3 ? 'Where are we heading?' : 'No places found'}
+              </Text>
+              <Text className="mt-2 max-w-xs text-center text-sm leading-5 text-muted">
+                {query.trim().length < 3
+                  ? 'Search for a destination, landmark, street, or address.'
+                  : helper || 'Try a more specific place name or include the city.'}
+              </Text>
+            </View>
+          ) : null}
           renderItem={({ item }) => (
             <Pressable
               className="mx-4 flex-row items-center border-b border-line py-4"
@@ -50,6 +69,6 @@ export default function SearchScreen() {
         />
         <Text className="px-5 pb-5 text-center text-[11px] text-muted">Place data © OpenStreetMap contributors</Text>
       </SafeAreaView>
-    </Screen>
+    </View>
   );
 }

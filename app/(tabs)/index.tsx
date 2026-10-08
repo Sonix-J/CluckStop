@@ -8,6 +8,7 @@ import MapView, {
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
+import Constants, { ExecutionEnvironment } from "expo-constants";
 import * as Location from "expo-location";
 import {
   Bookmark,
@@ -112,13 +113,19 @@ export default function Home() {
     if (!destination) return;
     setBusy(true);
     try {
-      const permission = await requestTripPermissions();
-      if (!permission.ok) {
-        router.push({
-          pathname: "/permissions",
-          params: { missing: permission.reason },
-        });
-        return;
+      const isExpoGo = Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
+      if (isExpoGo) {
+        const foreground = await Location.requestForegroundPermissionsAsync();
+        if (foreground.status !== 'granted') {
+          router.push({ pathname: '/permissions', params: { missing: 'foreground' } });
+          return;
+        }
+      } else {
+        const permission = await requestTripPermissions();
+        if (!permission.ok) {
+          router.push({ pathname: '/permissions', params: { missing: permission.reason } });
+          return;
+        }
       }
       const trip: Trip = {
         id: `trip-${Date.now()}`,
@@ -128,9 +135,15 @@ export default function Home() {
         alertRadius: radius,
         alarmTriggered: false,
       };
-      await armTrip(trip);
+      if (!isExpoGo) await armTrip(trip);
       start(trip);
       sheet.current?.snapToIndex(0);
+      if (isExpoGo) {
+        Alert.alert(
+          'Foreground test mode',
+          'Cluckie is watching your stop while Expo Go stays open. Install a development build for background tracking and lock-screen alerts.',
+        );
+      }
     } catch {
       Alert.alert(
         "Couldn’t start trip",
@@ -164,7 +177,7 @@ export default function Home() {
                   const { disarmTrip } = await import(
                     "@/services/backgroundTasks"
                   );
-                  await disarmTrip();
+                  await disarmTrip().catch(() => undefined);
                   end();
                 },
               },
@@ -207,7 +220,9 @@ export default function Home() {
         <View className="mt-2 flex-row items-center">
           <Pressable className="flex-1 rounded-app bg-panel shadow-lg" onPress={() => router.push("/search")}>
             <SearchBox
+              pointerEvents="none"
               editable={false}
+              value={destination?.name ?? ''}
               placeholder="Search stop"
             />
           </Pressable>
