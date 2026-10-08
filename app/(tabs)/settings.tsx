@@ -1,15 +1,28 @@
-import { ScrollView, Switch, Text, View } from 'react-native';
-import { BellRing, LocateFixed, ShieldCheck, Smartphone, Vibrate } from 'lucide-react-native';
+import { Pressable, ScrollView, Switch, Text, View } from 'react-native';
+import { BellRing, Check, LocateFixed, Play, ShieldCheck, Smartphone, Vibrate } from 'lucide-react-native';
+import { useAudioPlayer } from 'expo-audio';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { AppButton } from '@/components/ui';
 import { colors, RADII } from '@/constants';
-import { useRoostopStore } from '@/store/useRoostopStore';
+import { useRoostopStore, type AlarmSound } from '@/store/useRoostopStore';
 import { formatDistance } from '@/utils/distance';
 
 export default function Settings() {
   const settings = useRoostopStore((s) => s.settings);
   const update = useRoostopStore((s) => s.updateSettings);
+  const alarmSound = useRoostopStore((s) => s.alarmSound);
+  const setAlarmSound = useRoostopStore((s) => s.setAlarmSound);
+  const bellPreview = useAudioPlayer(require('../../assets/sounds/classic-bell.mp3'));
+  const roosterPreview = useAudioPlayer(require('../../assets/sounds/rooster-crow.mp3'));
+  const cluckPreview = useAudioPlayer(require('../../assets/sounds/gentle-cluck.mp3'));
+  const previewSound = (sound: AlarmSound) => {
+    [bellPreview, roosterPreview, cluckPreview].forEach((player) => player.pause());
+    const player = sound === 'rooster-crow' ? roosterPreview : sound === 'gentle-cluck' ? cluckPreview : bellPreview;
+    void player.seekTo(0);
+    player.play();
+    setAlarmSound(sound);
+  };
   return (
     <View className="flex-1 bg-white">
       <SafeAreaView className="flex-1">
@@ -27,6 +40,35 @@ export default function Settings() {
             <Setting icon={<Smartphone size={20} color={colors.rooster} />} title="Alarm sound" body="Play a notification sound">
               <Switch value={settings.sound} onValueChange={(value) => update({ sound: value })} trackColor={{ false: colors.line, true: colors.rooster }} />
             </Setting>
+            <View className="px-4 py-4">
+              <Text className="mb-3 text-sm font-semibold text-ink">Wake-up sound</Text>
+              <View className="gap-2">
+                {([
+                  ['classic-bell', 'Classic Bell', 'Clear and attention-grabbing'],
+                  ['rooster-crow', 'Rooster Crow', 'Cluckie’s signature wake-up'],
+                  ['gentle-cluck', 'Gentle Cluck', 'Playful and less intense'],
+                ] as const).map(([value, label, description]) => {
+                  const selected = alarmSound === value;
+                  return (
+                    <Pressable
+                      key={value}
+                      accessibilityRole="radio"
+                      accessibilityState={{ selected }}
+                      onPress={() => previewSound(value)}
+                      className={`min-h-[64px] flex-row items-center rounded-xl border px-3 py-2 ${selected ? 'border-rooster bg-red-50' : 'border-line bg-white'}`}
+                    >
+                      <View className="h-9 w-9 items-center justify-center">
+                        {selected ? <Check size={20} color={colors.rooster} /> : <Play size={19} color={colors.muted} />}
+                      </View>
+                      <View className="ml-2 flex-1">
+                        <Text className="text-sm font-bold text-ink">{label}</Text>
+                        <Text className="mt-0.5 text-xs text-muted">{description}</Text>
+                      </View>
+                    </Pressable>
+                  );
+                })}
+              </View>
+            </View>
           </Section>
           <Section title="Access">
             <Setting icon={<LocateFixed size={20} color={colors.rooster} />} title="Location & notifications" body="Review system permissions">

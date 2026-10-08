@@ -16,7 +16,12 @@ export default function RootLayout() {
   const complete = useRoostopStore((s) => s.onboardingComplete);
   const triggerAlarm = useRoostopStore((s) => s.triggerAlarm);
   const tripStatus = useRoostopStore((s) => s.tripStatus);
-  const alarmPlayer = useAudioPlayer(require('../assets/sounds/rooster-crow.mp3'));
+  const alarmSound = useRoostopStore((s) => s.alarmSound);
+  const alarmSoundEnabled = useRoostopStore((s) => s.settings.sound);
+  const bellPlayer = useAudioPlayer(require('../assets/sounds/classic-bell.mp3'));
+  const roosterPlayer = useAudioPlayer(require('../assets/sounds/rooster-crow.mp3'));
+  const cluckPlayer = useAudioPlayer(require('../assets/sounds/gentle-cluck.mp3'));
+  const alarmPlayer = alarmSound === 'rooster-crow' ? roosterPlayer : alarmSound === 'gentle-cluck' ? cluckPlayer : bellPlayer;
   const segments = useSegments();
   const router = useRouter();
 
@@ -51,14 +56,17 @@ export default function RootLayout() {
   }, []);
 
   useEffect(() => {
-    if (tripStatus === 'alarming') {
+    if (tripStatus === 'alarming' && alarmSoundEnabled) {
       alarmPlayer.loop = true;
       alarmPlayer.play();
-      return;
+      return () => {
+        alarmPlayer.pause();
+        void alarmPlayer.seekTo(0);
+      };
     }
     alarmPlayer.pause();
     void alarmPlayer.seekTo(0);
-  }, [alarmPlayer, tripStatus]);
+  }, [alarmPlayer, alarmSoundEnabled, tripStatus]);
 
   if (!hydrated || !fontsLoaded) return null;
   return <GestureHandlerRootView style={{ flex: 1 }}><StatusBar style="auto"/><Stack screenOptions={{ headerShown: false, animation: 'fade' }}><Stack.Screen name="index"/><Stack.Screen name="welcome"/><Stack.Screen name="auth"/><Stack.Screen name="(tabs)"/><Stack.Screen name="onboarding"/><Stack.Screen name="search" options={{ presentation: 'modal' }}/><Stack.Screen name="permissions" options={{ presentation: 'modal' }}/><Stack.Screen name="alarm" options={{ gestureEnabled: false }}/><Stack.Screen name="arrival" options={{ gestureEnabled: false }}/></Stack></GestureHandlerRootView>;

@@ -6,6 +6,7 @@ const mascotSources = {
   signup: require('../../Cluckie/Cluckie_signup_model.png'),
   thinking: require('../../Cluckie/Cluckie_forget_model.png'),
   sleeping: require('../../Cluckie/Cluckie_sleeping.png'),
+  alarmClock: require('../../Cluckie/Cluckie_alarm_clock.png'),
 } satisfies Record<string, ImageSourcePropType>;
 
 export type MascotVariant = keyof typeof mascotSources;
